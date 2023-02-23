@@ -16,7 +16,7 @@ import java.util.List;
 @RequestMapping("/cars")
 public class CarController {
 
-    private CarServiceList carServiceList;
+    private final CarServiceList carServiceList;
 
     @Autowired
     public CarController(CarServiceList carServiceList) {
@@ -25,20 +25,19 @@ public class CarController {
 
     @GetMapping("")
     public String cars(Model model) {  // получим все автомобили
-        model.addAttribute("cars", carServiceList.index());
+        model.addAttribute("cars", carServiceList.getAll());
         return "cars";
     }
 
     @GetMapping("/{id}")
     public String show(@PathVariable("id") int id, Model model) {  // получим машину по id
-        model.addAttribute("car", carServiceList.show(id));
+        model.addAttribute("car", carServiceList.getById(id));
         return "show";
     }
     @GetMapping("/count")
-    public String count(Model model, @RequestParam(value = "count",required = false) Integer count){ //выведем указанное количество автомобилей
-        List<Car> cars = carServiceList.count(count);
+    public String count(Model model, @RequestParam(value = "count",required = false) int count){ //выведем указанное количество автомобилей
+        List<Car> cars = carServiceList.getCarCount(count);
         model.addAttribute("cars",cars);
         return "count";
     }
-
 }

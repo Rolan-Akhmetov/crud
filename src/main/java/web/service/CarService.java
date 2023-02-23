@@ -1,4 +1,4 @@
-package web.CarService;
+package web.service;
 
 import org.springframework.stereotype.Service;
 import web.models.Car;
@@ -9,8 +9,8 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
-public class CarServiceList {
-    private final List<Car> carList =new ArrayList<>();;
+public class CarService {
+    private final List<Car> carList =new ArrayList<>();
 
     {
         carList.add(new Car(1, "Mitsubishi GTO", 1994));
@@ -25,8 +25,8 @@ public class CarServiceList {
     public Car getById(int id){
         return carList.stream().filter(e->e.getId()==id).findAny().orElse(null);
     }
-    public List<Car> getCarCount(int count){
-        if (!Objects.equals(count,0)) {
+    public List<Car> getCarCount(Integer count){
+        if (Objects.nonNull(count)) {
             return carList.stream().limit(count).collect(Collectors.toList());
         }
         return carList;

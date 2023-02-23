@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import web.CarService.CarServiceList;
+import web.service.CarService;
 import web.models.Car;
 
 import java.util.List;
@@ -16,10 +16,10 @@ import java.util.List;
 @RequestMapping("/cars")
 public class CarController {
 
-    private final CarServiceList carServiceList;
+    private final CarService carServiceList;
 
     @Autowired
-    public CarController(CarServiceList carServiceList) {
+    public CarController(CarService carServiceList) {
         this.carServiceList = carServiceList;
     }
 
@@ -35,7 +35,7 @@ public class CarController {
         return "show";
     }
     @GetMapping("/count")
-    public String count(Model model, @RequestParam(value = "count",required = false) int count){ //выведем указанное количество автомобилей
+    public String count(Model model, @RequestParam(value = "count",required = false) Integer count){ //выведем указанное количество автомобилей
         List<Car> cars = carServiceList.getCarCount(count);
         model.addAttribute("cars",cars);
         return "count";

@@ -35,10 +35,9 @@ public class CarController {
         return "show";
     }
     @GetMapping("/count")
-    public String count(Model model, @RequestParam(value = "count",required = false) Integer count){
+    public String count(Model model, @RequestParam(value = "count",required = false) Integer count){ //выведем указанное количество автомобилей
         List<Car> cars = carServiceList.count(count);
         model.addAttribute("cars",cars);
-
         return "count";
     }
 

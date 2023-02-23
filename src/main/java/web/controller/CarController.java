@@ -18,16 +18,15 @@ public class CarController {
         this.carServiceList = carServiceList;
     }
 
-    @GetMapping()
+    @GetMapping("")
     public String cars(Model model){  // получим все автомобили
         model.addAttribute("cars",carServiceList.index());
-        System.out.println("_____------");
         return "cars";
     }
-    @GetMapping("{/id}")
+    @GetMapping("/{id}")
     public String show(@PathVariable("id") int id,Model model){  // получим машину по id
         model.addAttribute("car",carServiceList.show(id));
-
         return "show";
     }
+
 }

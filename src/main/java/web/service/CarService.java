@@ -1,34 +1,43 @@
 package web.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import web.dao.CarDao;
 import web.models.Car;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Service
-public class CarService {
-    private final List<Car> carList =new ArrayList<>();
+public class CarService implements web.service.Service {
 
-    {
-        carList.add(new Car(1, "Mitsubishi GTO", 1994));
-        carList.add(new Car(2, "BMW X5", 2007));
-        carList.add(new Car(3, "Mercedes E200", 1999));
-        carList.add(new Car(4, "Lexus IS250", 2006));
-        carList.add(new Car(5, "Datsun ON-DO", 2018));
+    private CarDao carDao;
+    @Autowired
+    public CarService(CarDao carDao) {
+        this.carDao = carDao;
     }
+
+    @Override
     public List<Car> getAll() {
-        return carList;
+        return carDao.getAll();
     }
-    public Car getById(int id){
-        return carList.stream().filter(e->e.getId()==id).findAny().orElse(null);
+
+    @Override
+    public Car getById(int id) {
+        return carDao.getById(id);
     }
-    public List<Car> getCarCount(Integer count){
-        if (Objects.nonNull(count)) {
-            return carList.stream().limit(count).collect(Collectors.toList());
-        }
-        return carList;
+
+    @Override
+    public void save(Car car) {
+        carDao.save(car);
+    }
+
+    @Override
+    public void update(int id, Car updateCar) {
+        carDao.update(id,updateCar);
+    }
+
+    @Override
+    public void delete(int id) {
+        carDao.delete(id);
     }
 }

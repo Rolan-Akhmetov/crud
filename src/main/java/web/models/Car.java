@@ -1,12 +1,28 @@
 package web.models;
 
+import javax.persistence.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
+@Entity
+@Table(name = "Car")
 public class Car {
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @NotEmpty(message = "Enter the correct value")
+    @Size(min = 2,max = 20,message = "Enter the correct value")
+    @Column(name = "model")
     private String model;
+    @Min(value = 0, message ="Enter the correct value" )
+    @Column(name = "yearOfRelease")
     private int yearOfRelease;
 
-    public Car(int id, String model, int yearOfRelease) {
-        this.id = id;
+    public Car() {
+    }
+
+    public Car(String model, int yearOfRelease) {
         this.model = model;
         this.yearOfRelease = yearOfRelease;
     }

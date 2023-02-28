@@ -3,14 +3,12 @@ package web.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import web.service.CarService;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 import web.models.Car;
+import web.service.CarService;
 
-import java.util.List;
+import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/cars")
@@ -34,10 +32,39 @@ public class CarController {
         model.addAttribute("car", carServiceList.getById(id));
         return "show";
     }
-    @GetMapping("/count")
-    public String count(Model model, @RequestParam(value = "count",required = false) Integer count){ //выведем указанное количество автомобилей
-        List<Car> cars = carServiceList.getCarCount(count);
-        model.addAttribute("cars",cars);
-        return "count";
+
+    @GetMapping("/new")
+    public String newCar(Model model){
+        model.addAttribute("car", new Car());
+        return "new";
+    }
+    @PostMapping()
+    public String create(@ModelAttribute("car") @Valid Car car, //добавляем новую машину
+                         BindingResult bindingResult){
+        if(bindingResult.hasErrors())               //проверяем на валидацию
+            return "new";
+        carServiceList.save(car);
+        return "redirect:/cars"; //при добавлении возвращает нас на главную страницу с списком
+    }
+    @GetMapping("/{id}/edit")
+    public String edit(Model model, @PathVariable("id") int id){;
+        model.addAttribute("car",carServiceList.getById(id));
+        return "edit";
+    }
+    @PatchMapping("/{id}")
+    public String update(@ModelAttribute("car") @Valid Car car, //изменяем данные по машине
+                         BindingResult bindingResult,
+                         @PathVariable("id") int id){
+        if (bindingResult.hasErrors())     //проверяем на валидацию
+            return "edit";
+        carServiceList.update(id,car);
+        return "redirect:/cars";
+
+    }
+    @DeleteMapping("/{id}")
+    public String delete(@PathVariable("id") int id){ //удаляем машину
+        carServiceList.delete(id);
+
+        return "redirect:/cars";
     }
 }

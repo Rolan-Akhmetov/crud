@@ -57,7 +57,7 @@ public class CarController {
                          @PathVariable("id") int id){
         if (bindingResult.hasErrors())     //проверяем на валидацию
             return "edit";
-        carServiceList.update(id,car);
+        carServiceList.update(car);
         return "redirect:/cars";
 
     }

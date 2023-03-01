@@ -4,11 +4,11 @@ import web.models.Car;
 
 import java.util.List;
 
-public interface Service {
-    public List<Car> getAll();
-    public Car getById(int id);
-    public void save(Car car);
-    public void update(int id, Car updateCar);
+public interface Service<T> {
+    public List<T> getAll();
+    public T getById(int id);
+    public void save(T t);
+    public void update(T t);
     public void delete(int id);
 
 

@@ -4,10 +4,15 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import web.models.Car;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 @Repository
@@ -17,13 +22,15 @@ public class CarDao{
     @Autowired
     public CarDao(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
+
     }
 
     @Transactional(readOnly = true)
     public List<Car> getAll() {
         Session session = sessionFactory.getCurrentSession();
-        return session.createQuery("select c from Car c", Car.class).
-                getResultList();
+        List<Car> cars = session.createQuery("select c from Car c", Car.class).getResultList();
+        Collections.sort(cars, Comparator.comparing(Car::getModel));
+        return cars;
     }
 
     @Transactional(readOnly = true)
@@ -39,12 +46,9 @@ public class CarDao{
     }
 
     @Transactional
-    public void update(int id, Car updateCar) {
+    public void update(Car updateCar) {
         Session session = sessionFactory.getCurrentSession();
-        Car carToBeUpdated = session.get(Car.class, id);
-
-        carToBeUpdated.setModel(updateCar.getModel());
-        carToBeUpdated.setYearOfRelease(updateCar.getYearOfRelease());
+        session.saveOrUpdate(updateCar);
     }
 
     @Transactional

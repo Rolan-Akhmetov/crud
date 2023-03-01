@@ -8,7 +8,7 @@ import web.models.Car;
 import java.util.List;
 
 @Service
-public class CarService implements web.service.Service {
+public class CarService implements web.service.Service<Car> {
 
     private CarDao carDao;
     @Autowired
@@ -32,8 +32,8 @@ public class CarService implements web.service.Service {
     }
 
     @Override
-    public void update(int id, Car updateCar) {
-        carDao.update(id,updateCar);
+    public void update(Car updateCar) {
+        carDao.update(updateCar);
     }
 
     @Override

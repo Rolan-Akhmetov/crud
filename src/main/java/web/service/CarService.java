@@ -3,38 +3,45 @@ package web.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import web.dao.CarDao;
 import web.models.Car;
+import web.repositories.CarRepositories;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
-@Transactional
-public class CarService{
+@Transactional(readOnly = true)
+public class CarService {
 
-    private final CarDao carDao;
+    private final CarRepositories carRepositories;
+
     @Autowired
-    public CarService(CarDao carDao) {
-        this.carDao = carDao;
+    public CarService(CarRepositories carRepositories) {
+        this.carRepositories = carRepositories;
     }
-
 
     public List<Car> getAll() {
-        return carDao.getAll();
+        return carRepositories.findAll();
     }
-
 
     public Car getById(int id) {
-        return carDao.getById(id);
+        Optional<Car> carOptional = carRepositories.findById(id);
+        return carOptional.orElse(null);
     }
 
+    @Transactional
     public void save(Car car) {
-        carDao.save(car);
+        carRepositories.save(car);
     }
-    public void update(Car updateCar) {
-        carDao.update(updateCar);
+
+    @Transactional
+    public void update(int id, Car updateCar) {
+        updateCar.setId(id);
+        carRepositories.save(updateCar);
     }
+
+    @Transactional
     public void delete(int id) {
-        carDao.delete(id);
+        carRepositories.deleteById(id);
     }
 }
